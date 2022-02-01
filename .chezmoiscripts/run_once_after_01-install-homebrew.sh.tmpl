@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# colors
+source /tmp/chezmoi-utils.sh
+echo -e "${start}"
+
+step="HOMEBREW"
+
+{{ if or (lt 0 (atoi (env "SCRIPTS_START_AT"))) (env "SKIP_HOMEBREW_SETUP") -}}
+echo -e "$(log_line ${step} "skip" "\$SKIP_HOMEBREW_SETUP was set")"
+exit 0
+{{- end }}
+
+if [[ -e /usr/local/bin/brew || -e /home/linuxbrew/.linuxbrew/bin/brew ]]
+then
+    echo -e "$(log_line ${step} "skip" "Homebrew already installed")"
+else
+    echo -e "$(log_line ${step} "install" "via brew.sh")"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo -e "$(log_line ${step} "done" "shell env warning may be ignored")"
+fi
+echo -e "${finish}"

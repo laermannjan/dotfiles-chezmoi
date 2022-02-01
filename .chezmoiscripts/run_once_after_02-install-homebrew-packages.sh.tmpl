@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# colors
+source /tmp/chezmoi-utils.sh
+echo -e "${start}"
+
+step="PACKAGES"
+
+echo -e "$(log_line ${step} "load" "Homebrew shellenv")"
+{{- if eq .chezmoi.os "darwin" }}
+test -e /usr/local/bin/brew && eval "$(/usr/local/bin/brew shellenv)"
+test -d /opt/homebrew && eval "$(/opt/homebrew/bin/brew shellenv)"
+{{- end }}
+{{- if eq .chezmoi.os "linux" }}
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+{{- end }}
+
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/brewfile/Brewfile"
+echo -e "$(log_line ${step} "install" "via Brewfile=${HOMEBREW_BUNDLE_FILE}")"
+brew bundle
+echo -e "$(log_line ${step} "done")"
+
+echo -e "${finish}"

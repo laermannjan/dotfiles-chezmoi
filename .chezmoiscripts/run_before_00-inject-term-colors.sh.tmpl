@@ -1,0 +1,106 @@
+#!/bin/sh
+
+cat <<EOF >/tmp/chezmoi-utils.sh
+#!/bin/sh
+
+# non-standard rgb colors
+# \e[ := escape char
+# m := final byte
+# 38;2;r;g;b color
+
+export dark_blgr="\e[38;2;52;115;116m"
+export dark_blue="\e[38;2;59;90;129m"
+export bright_green="\e[38;2;111;247;139m"
+export leafy_green="\e[38;2;113;211;142m"
+
+export bold="\e[1m"
+export uline="\e[4m"
+export reset="\e[0m"
+
+export br_open="\${dark_blgr}[\${reset}"
+export br_close="\${dark_blgr}]\${reset}"
+export delim="\${leafy_green}::\${reset}"
+
+grad() {
+    TXT=\$1
+    COLORS=\$2
+
+    BUCKET_SIZE=\$(( (\${#TXT} -1 )/\${#COLORS[@]} + 1))
+    if [ \$BUCKET_SIZE == 0 ] 
+    then 
+        BUCKET_SIZE=1 
+    fi
+    OUT=""
+    for (( i=0; i<\${#TXT}; i++ )); do
+        COLOR=\${COLORS[\$((i/\$BUCKET_SIZE))]}
+        printf "\e[38;2;\${COLOR}m\${TXT:i:1}\e[0m"
+    done
+}
+
+warm_grad() {
+    COLORS=("238;102;113" "241;135;127" "243;158;126" "243;172;141" "248;201;152")
+    grad \$1 \$COLORS
+}
+
+cool_grad() {
+    COLORS=("40;85;87" "41;77;89" "43;76;92" "44;70;92" "48;66;97")
+    grad \$1 \$COLORS
+}
+
+cyan_grad() {
+    COLORS=("105;230;210" "107;226;225" "108;206;235" "112;192;242" "115;180;244")
+    grad \$1 \$COLORS
+}
+
+green_grad() {
+    COLORS=("86;178;131" "76;159;120" "66;144;104" "70;150;108" "64;139;100")
+    grad \$1 \$COLORS
+}
+
+grey_grad() {
+    COLORS=("33;41;49" "42;50;58" "52;62;73" "64;76;88" "65;77;89")
+    grad \$1 \$COLORS
+}
+
+bracketize() {
+    printf "\${br_open} \$1 \${br_close}"
+}
+
+wrap_color() {
+    printf "\$1\$2\${reset}"
+}
+
+wrap_info() {
+    printf "\${leafy_green}\$1\${reset}"
+}
+
+log_line() {
+    case "\$2" in
+        "install")
+            op=\${install}
+            ;;
+        "load")
+            op=\${load}
+            ;;
+        "skip")
+            op=\${skip}
+            ;;
+        "done")
+            op=\${done}
+            ;;
+    esac
+    printf "\$(bracketize \$(warm_grad "\$1")) \${delim} \${op} \$(wrap_info "\$3")"
+}
+
+br() {
+    printf "%0.s\$1" {1..80}
+}
+
+export install="\$(bracketize \$(cyan_grad INSTALL))"
+export load="\$(bracketize \$(cyan_grad LOADING))"
+export done="\$(bracketize \$(wrap_color \${bright_green} DONE))"
+export skip="\$(bracketize \$(cool_grad SKIPPING))"
+
+export start="\\n\$(warm_grad \$(br "#"))\\n"
+export finish="\\n\$(cool_grad \$(br "^"))\\n"
+EOF

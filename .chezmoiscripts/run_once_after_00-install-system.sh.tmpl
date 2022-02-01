@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# colors
+source /tmp/chezmoi-utils.sh
+echo -e "${start}"
+
+step="SYSTEM"
+
+{{- if eq .chezmoi.os "darwin" }}
+echo -e "$(log_line ${step} "install" "xcode_utilities")"
+xcode-select --install
+echo -e "${step} ${done}"
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
+echo -e "$(log_line ${step} "install" "build-essential")"
+sudo apt-get update
+sudo apt-get install -y build-essential
+echo -e "$(log_line ${step} "done")"
+{{- end }}
+
+echo -e "${finish}"
