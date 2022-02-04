@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# colors
+source /tmp/chezmoi-utils.sh
+echo -e "${start}"
+
+step="ASDF-PLUGINS"
+
+{{ $plugins := dict
+  "nodejs"     "lts-gallium"
+  "ruby"       "latest"
+  "direnv"     "latest"
+  "rust"       "latest"
+  "terraform"  "latest"
+  "python"     "latest"
+  "kubectl"    "latest"
+  "argo"       "latest"
+  "argocd"     "latest"
+  "awscli"     "latest"
+  "kotlin"     "latest"
+}}
+
+
+{{ range (keys $plugins) -}}
+    {{- $key := . }}
+    {{- $val := get $plugins $key }}
+
+    echo -e "$(log_line ${step} "install" Plugin: "$key")"
+    asdf plugin-add {{ $key }} || true
+
+    {{- if not (eq $val "None") }}
+        echo -e "$(log_line ${step} "install" "$key version: $val")"
+        asdf install {{ $key }} {{ $val }} || true
+        asdf global {{ $key }} {{ $val }} || true
+    {{- end -}} 
+{{ end -}}
+
+echo -e "$(log_line ${step} "done")"
+
+echo -e "${finish}"

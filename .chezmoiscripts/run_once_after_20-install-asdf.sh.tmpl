@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# colors
+source /tmp/chezmoi-utils.sh
+echo -e "${start}"
+
+step="ASDF"
+
+if [[ ! $(command -v asdf) ]]; then
+    echo -e "$(log_line ${step} "install")"
+    brew install asdf
+else
+    echo -e "$(log_line ${step} "update")"
+    asdf update
+fi
+echo -e "$(log_line ${step} "done")"
+
+echo -e "${start}"

@@ -88,6 +88,9 @@ log_line() {
         "done")
             op=\${done}
             ;;
+        "update")
+            op=\${update}
+            ;;
     esac
     printf "\$(bracketize \$(warm_grad "\$1")) \${delim} \${op} \$(wrap_info "\$3")"
 }
@@ -100,6 +103,7 @@ export install="\$(bracketize \$(cyan_grad INSTALL))"
 export load="\$(bracketize \$(cyan_grad LOADING))"
 export done="\$(bracketize \$(wrap_color \${bright_green} DONE))"
 export skip="\$(bracketize \$(cool_grad SKIPPING))"
+export update="\$(bracketize \$(cool_grad UPDATING))"
 
 export start="\\n\$(warm_grad \$(br "#"))\\n"
 export finish="\\n\$(cool_grad \$(br "^"))\\n"
