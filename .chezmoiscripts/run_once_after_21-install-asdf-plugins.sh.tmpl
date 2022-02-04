@@ -34,11 +34,11 @@ test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
     {{- $key := . }}
     {{- $val := get $plugins $key }}
 
-    echo -e "$(log_line ${step} "install" "$key")"
+    echo -e "$(log_line ${step} "install" "${key}")"
     asdf plugin-add {{ $key }} || true
 
     {{- if not (eq $val "None") }}
-        echo -e "$(log_line ${step} "install" "$key version: $val")"
+        echo -e "$(log_line ${step} "install" "${key} version: ${val}")"
         asdf install {{ $key }} {{ $val }} || true
         asdf global {{ $key }} {{ $val }} || true
     {{- end -}} 
