@@ -17,6 +17,7 @@ step="ASDF-PLUGINS"
   "argo"       "latest"
   "argocd"     "latest"
   "awscli"     "latest"
+  "java"       "latest"
   "kotlin"     "latest"
 }}
 
@@ -24,10 +25,44 @@ echo -e "$(log_line ${step} "load" "Homebrew shellenv")"
 {{- if eq .chezmoi.os "darwin" }}
 test -e /usr/local/bin/brew && eval "$(/usr/local/bin/brew shellenv)"
 test -d /opt/homebrew && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+brew install openssl readline sqlite3 xz zlib node-build bash jq unzip tar curl make
 {{- end }}
 {{- if eq .chezmoi.os "linux" }}
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+
+sudo apt-get install \
+    make \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget curl llvm \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev
+    autoconf \
+    bison \
+    libyaml-dev \
+    libreadline6-dev \
+    libncurses5-dev \
+    libgdbm6 \
+    libgdbm-dev \
+    libdb-dev \
+    curl \
+    tar \
+    unzip \
+    sha256sum \
+    jq \
+    bash \
+
 {{- end }}
 
 {{ range (keys $plugins) -}}
