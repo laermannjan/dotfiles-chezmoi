@@ -1,0 +1,19 @@
+{{- if eq .chezmoi.os "darwin" }}
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+{{- end }}
+
+{{- if .alcemy }}
+{{    onepasswordDocument "jan.laermann@alcemy.tech SSH config" .vault -}}
+{{- end }}
+
+Host nas
+  Hostname 192.168.2.114
+  User flabber
+
+Host github.com
+	Hostname github.com
+	IdentityFile ~/.ssh/id_github
+	PreferredAuthentications publickey
+	User git

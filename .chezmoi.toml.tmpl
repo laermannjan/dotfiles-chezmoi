@@ -1,0 +1,19 @@
+{{/* boolean feature tags */}}
+{{- $alcemy := false -}}{{/* true if this machine should have alcemy secrets from 1Password */}}
+{{- $personal := false -}}{{/* true if this machine should have personal secrets from 1Password */}}
+{{- "" -}}
+
+[data]
+    hostname = {{ $hostname | quote }}
+    alcemy = {{ $alcemy }}
+    personal = {{ $personal }}
+{{- if $alcemy }}
+    alcemy_private_vault = "rhopwarwaqsizwnz4aaa7obh7m"
+{{- end }}
+{{- if $personal }}
+    personal_private_vault = "x4tsyq6e6qmaauhbotw3sj6rqu"
+{{- end }}
+
+[edit]
+    command = "code"
+    args = ["--wait"]
