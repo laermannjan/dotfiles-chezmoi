@@ -5,7 +5,7 @@ Host *
 {{- end }}
 
 {{- if .alcemy }}
-{{    onepasswordDocument "jan.laermann@alcemy.tech SSH config" .vault -}}
+{{    onepasswordDocument "jan.laermann@alcemy.tech SSH config" .alcemy_private_vault "alcemy" -}}
 {{- end }}
 
 Host nas
